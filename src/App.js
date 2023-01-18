@@ -1,23 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState, useEffect } from "react";
+import searchNews from "./api";
+import NewsList from "./components/NewsList";
+import SearchBar from "./components/SearchBar";
 
 function App() {
+  const [news, setNews] = useState([]);
+
+  const fetchNews = async () => {
+    const result = await searchNews();
+
+    setNews(result);
+  };
+
+  const handleSubmit = async (term) => {
+    const result = await searchNews(term);
+
+    setNews(result);
+  };
+
+  useEffect(() => {
+    fetchNews();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <SearchBar onSubmit={handleSubmit} />
+      <NewsList news={news} />
     </div>
   );
 }
